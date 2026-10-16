@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversor de Divisas + Bloc de Notas</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="logo-icon">
+        <i class="fa-solid fa-coins"></i>
+      </div>
+      <div>
+        <h1>Currency & Notes</h1>
+        <p>Conversión de divisas en tiempo real integrada con tu cuaderno de apuntes</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL DOS COLUMNAS -->
+  <main class="app-container">
+
+    <!-- COLUMNA IZQUIERDA: CONVERSOR -->
+    <section class="panel panel-converter">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-calculator"></i> Conversor de Divisas</h2>
+        <span class="live-indicator"><span class="pulse"></span> Tasas activas</span>
+      </div>
+
+      <form id="converter-form" onsubmit="return false;">
+        <!-- MONTO -->
+        <div class="form-group">
+          <label for="amount">Monto a convertir</label>
+          <div class="input-with-symbol">
+            <span class="symbol-prefix" id="from-symbol">$</span>
+            <input type="number" id="amount" value="100" min="0" step="any" placeholder="0.00" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- DIVISAS SELECCIÓN -->
+        <div class="currency-selectors">
+          <div class="form-group flex-1">
+            <label for="from-currency">De:</label>
+            <select id="from-currency">
+              <option value="USD">USD - Dólar EE.UU.</option>
+              <option value="EUR">EUR - Euro</option>
+              <option value="GBP">GBP - Libra Esterlina</option>
+              <option value="JPY">JPY - Yen Japonés</option>
+              <option value="ARS">ARS - Peso Argentino</option>
+              <option value="MXN">MXN - Peso Mexicano</option>
+              <option value="COP">COP - Peso Colombiano</option>
+              <option value="BRL">BRL - Real Brasileño</option>
+              <option value="CLP">CLP - Peso Chileno</option>
+              <option value="CAD">CAD - Dólar Canadiense</option>
+            </select>
+          </div>
+
+          <button type="button" class="btn-swap" id="swap-btn" title="Invertir divisas">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+          </button>
+
+          <div class="form-group flex-1">
+            <label for="to-currency">A:</label>
+            <select id="to-currency">
+              <option value="USD">USD - Dólar EE.UU.</option>
+              <option value="EUR" selected>EUR - Euro</option>
+              <option value="GBP">GBP - Libra Esterlina</option>
+              <option value="JPY">JPY - Yen Japonés</option>
+              <option value="ARS">ARS - Peso Argentino</option>
+              <option value="MXN">MXN - Peso Mexicano</option>
+              <option value="COP">COP - Peso Colombiano</option>
+              <option value="BRL">BRL - Real Brasileño</option>
+              <option value="CLP">CLP - Peso Chileno</option>
+              <option value="CAD">CAD - Dólar Canadiense</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TARJETA CON RESULTADO -->
+        <div class="result-card">
+          <div class="result-rate-info">
+            Tasa de cambio: <span id="rate-display">1 USD = 0.92 EUR</span>
+          </div>
+          <div class="result-value" id="result-display">
+            92.00 <small>EUR</small>
+          </div>
+        </div>
+
+        <!-- OPCIÓN DE AUTO-GUARDADO -->
+        <div class="autosave-toggle">
+          <input type="checkbox" id="autosave-check" checked>
+          <label for="autosave-check">
+            <i class="fa-solid fa-bolt"></i> Enviar automáticamente a notas al calcular
+          </label>
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="actions-group">
+          <button type="button" id="send-to-notes-btn" class="btn btn-primary">
+            <i class="fa-solid fa-plus-circle"></i> Enviar a Notas Ahora
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- COLUMNA DERECHA: BLOC DE NOTAS -->
+    <section class="panel panel-notes">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-book-bookmark"></i> Bloc de Notas Sincronizado</h2>
+        <div class="panel-tools">
+          <button class="btn-icon" id="copy-all-btn" title="Copiar todo al portapapeles">
+            <i class="fa-regular fa-copy"></i>
+          </button>
+          <button class="btn-icon" id="export-btn" title="Descargar notas (.txt)">
+            <i class="fa-solid fa-download"></i>
+          </button>
+          <button class="btn-icon danger" id="clear-all-btn" title="Borrar todo">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- INPUT PARA NOTA RÁPIDA -->
+      <div class="quick-note-box">
+        <input type="text" id="quick-note-input" placeholder="Añadir nota manual rápida (presiona Enter)...">
+        <button id="add-quick-note-btn"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+
+      <!-- CONTENEDOR DE NOTAS GENERADAS -->
+      <div class="notes-feed" id="notes-container">
+        <!-- Las notas se insertan dinámicamente con JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TOAST DE NOTIFICACIONES -->
+  <div id="toast" class="toast">Notificación</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
